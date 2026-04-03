@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="ko" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PolyGen AI | 2D to 3D 변환의 혁신</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    
+    <!-- Pretendard Font (web font) -->
+    <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+
+    <!-- Tailwind CSS (CDN) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            purple: '#a855f7',
+                            blue: '#3b82f6',
+                            dark: '#0f1016',
+                            card: 'rgba(255, 255, 255, 0.03)'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Pretendard', 'Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-brand-dark text-white font-sans antialiased overflow-x-hidden">
+    <!-- Navbar -->
+    <nav class="fixed w-full z-50 glasseffect transition-all duration-300" id="navbar">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-brand-blue to-brand-purple">
+                PolyGen AI
+            </div>
+            <div class="hidden md:flex space-x-8 text-sm font-medium text-gray-300">
+                <a href="#features" class="hover:text-white transition-colors">기능</a>
+                <a href="#demo" class="hover:text-white transition-colors">데모 체험</a>
+                <a href="#pricing" class="hover:text-white transition-colors">요금제</a>
+            </div>
+            <div>
+                <a href="#demo" class="px-5 py-2.5 rounded-full bg-white text-black font-semibold text-sm hover:scale-105 transition-transform duration-300 inline-block">시작하기</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="relative min-h-screen flex items-center pt-20">
+        <!-- Background Gradient blob -->
+        <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-brand-purple rounded-full mix-blend-multiply filter blur-[128px] opacity-40 animate-blob"></div>
+        <div class="absolute top-1/3 right-1/4 w-96 h-96 bg-brand-blue rounded-full mix-blend-multiply filter blur-[128px] opacity-40 animate-blob animation-delay-2000"></div>
+
+        <div class="max-w-7xl mx-auto px-6 w-full grid grid-cols-1 md:grid-cols-2 gap-12 items-center relative z-10">
+            <div class="fade-in-up">
+                <div class="inline-block px-4 py-1.5 rounded-full border border-gray-700 bg-brand-card text-brand-purple text-xs font-semibold mb-6 tracking-wide">
+                    ✨ AI 3D GENERATOR 1.0 RELEASED
+                </div>
+                <h1 class="text-5xl md:text-7xl font-bold leading-tight mb-6">
+                    단 한 장의 2D,<br>
+                    <span class="bg-clip-text text-transparent bg-gradient-to-r from-brand-blue to-brand-purple">완벽한 3D</span>로.
+                </h1>
+                <p class="text-lg text-gray-400 mb-8 max-w-lg">
+                    10초면 충분합니다. 텍스처부터 PBR 머티리얼까지,<br>
+                    상상만 하던 디자인을 즉시 게임, AR 자산으로 바꿔보세요.
+                </p>
+                <div class="flex space-x-4">
+                    <button class="px-8 py-4 rounded-full bg-gradient-to-r from-brand-blue to-brand-purple font-semibold shadow-lg hover:shadow-brand-purple/50 hover:scale-105 transition-all duration-300 flex items-center">
+                        무료로 3D 만들기
+                        <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path></svg>
+                    </button>
+                    <button class="px-8 py-4 rounded-full border border-gray-700 hover:bg-gray-800 transition-colors duration-300 font-semibold">
+                        데모 보기
+                    </button>
+                </div>
+            </div>
+            
+            <!-- 3D Canvas Area -->
+            <div class="relative h-[500px] w-full fade-in-up animation-delay-500">
+                <div id="three-container" class="absolute inset-0 cursor-grab active:cursor-grabbing"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Interactive Demo Section -->
+    <section id="demo" class="py-24 relative z-10 border-t border-gray-800/50 bg-black/20">
+        <div class="max-w-5xl mx-auto px-6">
+            <div class="text-center mb-16 fade-in-up">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4">직접 경험해보세요</h2>
+                <p class="text-gray-400">이미지를 끌어다 놓으면 AI가 실시간으로 변환합니다.</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 bg-brand-card border border-gray-800 rounded-3xl p-8 shadow-2xl fade-in-up">
+                <!-- Upload Zone -->
+                <div id="drop-zone" class="border-2 border-dashed border-gray-600 rounded-2xl p-12 flex flex-col items-center justify-center text-center transition-colors duration-300 hover:border-brand-purple hover:bg-brand-purple/5">
+                    <svg class="w-12 h-12 text-gray-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
+                    <h3 class="text-lg font-semibold mb-2">이미지 업로드 (PNG, JPG)</h3>
+                    <p class="text-sm text-gray-500">이곳에 파일을 드래그하거나 클릭하여 시작하세요</p>
+                </div>
+                
+                <!-- Result Mockup -->
+                <div class="bg-black/50 rounded-2xl border border-gray-800 relative overflow-hidden flex items-center justify-center min-h-[300px]">
+                    <div id="progress-container" class="hidden flex-col items-center">
+                        <div class="w-12 h-12 border-4 border-brand-purple border-t-transparent rounded-full animate-spin mb-4"></div>
+                        <p class="text-sm text-brand-purple font-medium">AI가 3D 구조를 생성중입니다...</p>
+                    </div>
+                    <div id="demo-result" class="absolute inset-0 hidden">
+                        <!-- A secondary 3D view will be injected here if interacted -->
+                    </div>
+                    <p id="placeholder-text" class="text-gray-600 text-sm">결과물이 이곳에 표시됩니다</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="py-24 relative z-10">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-16 fade-in-up">
+                <h2 class="text-3xl md:text-5xl font-bold mb-4">압도적인 퍼포먼스</h2>
+                <p class="text-gray-400">차세대 비전 모델이 픽셀을 현실의 볼륨으로 재구성합니다.</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Card 1 -->
+                <div class="feature-card p-8 rounded-3xl bg-brand-card border border-gray-800 hover:border-gray-600 transition-all duration-300 fade-in-up">
+                    <div class="w-14 h-14 rounded-2xl bg-brand-purple/20 flex items-center justify-center mb-6 text-brand-purple">
+                        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-3">초당 변환 속도</h3>
+                    <p class="text-gray-400 leading-relaxed">클라우드 GPU 인프라를 통해 수 분이 걸리던 베이킹을 단축했습니다. 실시간 수준의 빠른 피드백을 제공합니다.</p>
+                </div>
+                
+                <!-- Card 2 -->
+                <div class="feature-card p-8 rounded-3xl bg-brand-card border border-gray-800 hover:border-gray-600 transition-all duration-300 fade-in-up animation-delay-200">
+                    <div class="w-14 h-14 rounded-2xl bg-brand-blue/20 flex items-center justify-center mb-6 text-brand-blue">
+                        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-3">자동 PBR 매핑</h3>
+                    <p class="text-gray-400 leading-relaxed">디퓨즈, 노말, 러프니스 맵을 AI가 추출하여 빛 반사와 재질감을 현실처럼 정밀하게 구현합니다.</p>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="feature-card p-8 rounded-3xl bg-brand-card border border-gray-800 hover:border-gray-600 transition-all duration-300 fade-in-up animation-delay-400">
+                    <div class="w-14 h-14 rounded-2xl bg-green-500/20 flex items-center justify-center mb-6 text-green-400">
+                        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-3">멀티 포맷 Export</h3>
+                    <p class="text-gray-400 leading-relaxed">OBJ, FBX, GLTF 등 업계 표준 포맷을 무손실로 다운로드하여 언리얼, 유니티, 블렌더에 즉시 연동하세요.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section id="pricing" class="py-24 relative z-10 border-t border-gray-800/50 bg-black/20">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-16 fade-in-up">
+                <h2 class="text-3xl md:text-5xl font-bold mb-4">합리적인 요금제</h2>
+                <p class="text-gray-400">필요한 만큼만, 프로젝트 규모에 맞게 선택하세요.</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
+                <!-- Free -->
+                <div class="border border-gray-800 bg-brand-card rounded-3xl p-8 fade-in-up">
+                    <h3 class="text-2xl font-bold mb-2">Starter</h3>
+                    <p class="text-gray-400 text-sm mb-6">기능 체험을 위한 최고의 선택</p>
+                    <div class="mb-6"><span class="text-4xl font-bold">Free</span></div>
+                    <ul class="space-y-4 mb-8 text-gray-300 text-sm">
+                        <li class="flex items-center"><svg class="w-5 h-5 text-brand-purple mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>월 5회 무료 생성</li>
+                        <li class="flex items-center"><svg class="w-5 h-5 text-brand-purple mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>표준 해상도 머티리얼</li>
+                        <li class="flex items-center opacity-50"><svg class="w-5 h-5 text-gray-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>상업적 이용 불가 (워터마크)</li>
+                    </ul>
+                    <button class="w-full py-3 rounded-full border border-gray-600 hover:bg-gray-800 transition-colors font-medium">무료로 시작하기</button>
+                </div>
+
+                <!-- Pro -->
+                <div class="border-2 border-brand-purple bg-brand-dark rounded-3xl p-8 transform scale-105 shadow-2xl shadow-brand-purple/20 relative fade-in-up animation-delay-200">
+                    <div class="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-brand-purple text-white text-xs font-bold px-4 py-1 rounded-full w-max">
+                        인기 플랜
+                    </div>
+                    <h3 class="text-2xl font-bold mb-2">Pro</h3>
+                    <p class="text-gray-400 text-sm mb-6">독립 개발자, 디자이너 필수</p>
+                    <div class="mb-6"><span class="text-4xl font-bold">$19</span><span class="text-gray-500">/월</span></div>
+                    <ul class="space-y-4 mb-8 text-gray-300 text-sm">
+                        <li class="flex items-center"><svg class="w-5 h-5 text-brand-purple mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>월 100회 초고속 렌더링</li>
+                        <li class="flex items-center"><svg class="w-5 h-5 text-brand-purple mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>4K 고해상도 PBR 텍스처</li>
+                        <li class="flex items-center"><svg class="w-5 h-5 text-brand-purple mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>상업적 무제한 이용 가능</li>
+                        <li class="flex items-center"><svg class="w-5 h-5 text-brand-purple mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>최우선 대기열 적용</li>
+                    </ul>
+                    <button class="w-full py-3 rounded-full bg-gradient-to-r from-brand-blue to-brand-purple font-medium text-white hover:shadow-lg hover:shadow-brand-purple/50 transition-all">구독하기</button>
+                </div>
+
+                <!-- Enterprise -->
+                <div class="border border-gray-800 bg-brand-card rounded-3xl p-8 fade-in-up animation-delay-400">
+                    <h3 class="text-2xl font-bold mb-2">Enterprise</h3>
+                    <p class="text-gray-400 text-sm mb-6">대량 생산 및 API 파트너</p>
+                    <div class="mb-6"><span class="text-4xl font-bold">Custom</span></div>
+                    <ul class="space-y-4 mb-8 text-gray-300 text-sm">
+                        <li class="flex items-center"><svg class="w-5 h-5 text-brand-purple mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>무제한 생성 용량</li>
+                        <li class="flex items-center"><svg class="w-5 h-5 text-brand-purple mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>전용 개발 API 및 문서 제공</li>
+                        <li class="flex items-center"><svg class="w-5 h-5 text-brand-purple mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>사내 전용 파인튜닝 모델 구축</li>
+                    </ul>
+                    <button class="w-full py-3 rounded-full border border-gray-600 hover:bg-gray-800 transition-colors font-medium">문의하기</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="border-t border-gray-800 py-12 text-center text-gray-500 text-sm relative z-10">
+        <p>© 2026 PolyGen AI. All rights reserved. Hackathon Prototype.</p>
+    </footer>
+
+    <!-- Three.js CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
